@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+.a-box-group>.a-box .a-box-tab>.a-box-inner, .a-box-group>.a-box.a-last>.a-box-inner,
+	.a-box-group>:last-child.a-box>.a-box-inner {
+	border-radius: 0 0 4px 4px;
+}
+
+.a-box-title {
+	overflow: hidden;
+}
+
+.a-box-title .a-box-inner {
+	overflow: hidden;
+	padding: 12px 18px 11px;
+	background: linear-gradient(to bottom, #f8f8f8, #eee);
+	box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.5);
+}

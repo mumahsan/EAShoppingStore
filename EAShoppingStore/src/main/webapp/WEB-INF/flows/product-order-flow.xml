@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<on-start>
+		<evaluate expression="orderController.createOrder()" result="flowScope.order"/>
+	</on-start>
+	
+	<!-- Setup Web Flow here -->
+    <view-state id="customerDetails" model="order">
+        <transition on="next" to="selectProduct">
+        	<evaluate expression="orderController.validateCust(flowScope.order, messageContext)"/>        	
+			<evaluate expression="orderController.initProductList()" result="flowScope.productList"/>
+		</transition>
+        <transition on="cancel" to="cancelOrder" />
+    </view-state>
+    
+     <view-state id="selectProduct" model="viewScope.newproduct">
+     	<on-render>
+     		<evaluate expression="orderController.selectProduct()" result="viewScope.newproduct"/>
+     	</on-render>
+     	<transition on="previous" to="customerDetails" />
+     	<transition on="next" to="showSummary" />
+        <transition on="add" to="selectProduct">        	       	
+        	<evaluate expression="orderController.addProduct(flowScope.order,viewScope.newproduct)"/>
+        </transition>
+        <transition on="clear" to="selectProduct">
+        	<evaluate expression="orderController.clearProducts(flowScope.order)"/>
+        </transition>
+        <transition on="cancel" to="cancelOrder" />
+    </view-state>
+    
+    <action-state id="showSummary">
+        <transition on="no" to="reviewOrder" />
+    </action-state>
+
+    
+    
+    <view-state id="showDrink">
+    	<transition on="previous" to="selectProduct" />
+        <transition on="next" to="reviewOrder" />
+        <transition on="cancel" to="cancelOrder" />
+    </view-state>
+    
+    <view-state id="reviewOrder" model="order">
+    		
+    	<transition on="previous" to="selectProduct" />
+        <transition on="next" to="orderConfirmation" >
+        	<evaluate expression="orderController.submitOrder(flowScope.order)" />
+        </transition>
+        <transition on="cancel" to="cancelOrder" />
+    </view-state>
+    
+     <end-state id="orderConfirmation"  view="orderConfirmation"/>
+
+    <end-state id="cancelOrder"  view="cancelOrder"/>
+    
+	
+</flow>
